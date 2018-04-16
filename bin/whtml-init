@@ -1,0 +1,52 @@
+#!/usr/bin/env node
+const program = require('commander')
+const exec = require('child_process').exec
+const co = require('co')
+const chalk = require('chalk')
+const ora = require('ora')
+const config = require('../package')
+
+
+program.on('--help', () => {
+  console.log()
+  console.log('  Examples:')
+  console.log()
+  console.log(chalk.gray('    # create a new project with an official template'))
+  console.log('    $ whtml init my-project')
+  console.log()
+})
+
+
+function help () {
+  program.parse(process.argv)
+  if (program.args.length < 1) return program.help()
+}
+help()
+
+
+
+let projectName  = program.args[0], gitUrl, branch, cmdStr
+gitUrl = config.git.url, branch = config.git.branch
+cmdStr = `git clone ${gitUrl} ${projectName} && cd ${projectName} && git checkout ${branch}`
+
+
+
+run(cmdStr)
+const spinner = ora('downloading template...')
+spinner.start()
+
+function run(url){
+  exec(url, (error, stdout, stderr) => {
+    if (error) {
+      console.log(error)
+      process.exit()
+    }
+    spinner.stop()
+    console.log(chalk.green('\n √ Compilation success...'))
+    console.log(chalk.green(`\n cd ${projectName}  #Enter the folder\n npm install  #Resolve dependence\n npm run all  #Running project`))
+    console.log()
+    process.exit()
+  })
+}
+
+

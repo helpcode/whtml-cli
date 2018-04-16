@@ -1,0 +1,13 @@
+#!/usr/bin/env node
+
+const config = require('../package')
+const chalk = require('chalk')
+
+console.log()
+console.log(
+    chalk.green(
+        `作者:${config.git.auto}\n项目地址:${config.git.url} \n分支：${config.git.branch}`
+    )
+)
+console.log()
+process.exit()
